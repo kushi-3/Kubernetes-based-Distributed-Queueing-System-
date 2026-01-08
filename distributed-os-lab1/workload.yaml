@@ -1,0 +1,13 @@
+config:
+  job:
+    distribution: binomial
+    parameter1: 3
+    parameter2: 0.5
+  task:
+    distribution: fixed-range
+    parameter1: 1
+    parameter2: 3
+    operations:
+      "A" : 10
+      "B" : 12
+      "C" : 15

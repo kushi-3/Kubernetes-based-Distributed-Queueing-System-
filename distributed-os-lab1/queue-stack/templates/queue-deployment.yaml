@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "queue-stack.queueName" . }}
+  labels:
+    {{- include "queue-stack.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "queue-stack.queueName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "queue-stack.queueName" . }}
+        {{- include "queue-stack.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: queue
+          image: {{ .Values.queue.image }}
+          imagePullPolicy: {{ .Values.queue.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.queue.port }}
+              name: grpc
+            - containerPort: 9100
+              name: metrics
+          args:
+            - "{{ .Values.queue.id }}"
+            - "{{ .Values.queue.numServers }}"
+            - "{{ .Values.queue.maxSize }}"
+          env:
+            - name: QUEUE_ID
+              value: "{{ .Values.queue.id }}"
+            - name: QUEUE_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

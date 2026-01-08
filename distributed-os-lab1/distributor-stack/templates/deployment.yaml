@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "distributor-stack.distributorName" . }}
+  labels:
+    {{- include "distributor-stack.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "distributor-stack.distributorName" . }}
+  replicas: {{ .Values.distributor.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "distributor-stack.distributorName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "distributor-stack.distributorName" . }}
+        {{- include "distributor-stack.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: distributor
+          image: {{ .Values.distributor.image }}
+          imagePullPolicy: {{ .Values.distributor.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.distributor.port }}
+              name: grpc
+            - containerPort: 9100
+              name: metrics
+          args:
+            - "{{ .Values.distributor.numQueues }}"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

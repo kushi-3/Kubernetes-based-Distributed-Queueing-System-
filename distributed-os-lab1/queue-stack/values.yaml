@@ -1,0 +1,17 @@
+queue:
+  image: "doslab1/queue:latest"
+  imagePullPolicy: IfNotPresent
+
+  id: 0
+  numServers: 4
+  maxSize: 1000
+  port: 50000
+
+server:
+  image: "doslab1/server:latest"
+  imagePullPolicy: IfNotPresent
+
+  replicas: 4
+  port: 60000
+
+resources: {}

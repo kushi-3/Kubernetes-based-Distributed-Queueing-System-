@@ -1,0 +1,44 @@
+# ===== Build =====
+FROM debian:bookworm-slim AS build
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        pkg-config \
+        protobuf-compiler \
+        protobuf-compiler-grpc \
+        libprotobuf-dev \
+        libgrpc++-dev \
+        libabsl-dev \
+        libspdlog-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+
+COPY CMakeLists.txt ./
+COPY third_party/ ./third_party
+COPY src/ ./src
+COPY proto/ ./proto
+
+RUN rm -rf build && \
+    cmake -B build -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build build --target queue -j
+
+# ===== Runtime =====
+FROM debian:bookworm-slim
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libprotobuf-dev \
+        libgrpc++-dev \
+        libabsl-dev \
+        libspdlog-dev \
+        ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY --from=build /src/build/queue /app/queue
+
+ENTRYPOINT ["/app/queue"]

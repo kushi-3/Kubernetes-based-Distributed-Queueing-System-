@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "distributor-stack.distributorName" . }}
+  labels:
+    app: distributor
+    {{- include "distributor-stack.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    app: {{ include "distributor-stack.distributorName" . }}
+  ports:
+    - name: grpc
+      port: {{ .Values.distributor.port }}
+      targetPort: {{ .Values.distributor.port }}
+    - name: metrics
+      port: 9100
+      targetPort: 9100

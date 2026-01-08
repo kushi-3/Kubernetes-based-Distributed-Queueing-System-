@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "queue-stack.serverName" . }}
+  labels:
+    {{- include "queue-stack.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "queue-stack.serverName" . }}
+  replicas: {{ .Values.server.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "queue-stack.serverName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "queue-stack.serverName" . }}
+        {{- include "queue-stack.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: server
+          image: {{ .Values.server.image }}
+          imagePullPolicy: {{ .Values.server.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.server.port }}
+              name: grpc
+          args:
+            - "{{ .Values.queue.id }}"
+            - "{{ .Values.queue.numServers }}"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: QUEUE_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: data
+          hostPath:
+            path: /var/lib/queue-data/{{ .Values.queue.id }}
+            type: DirectoryOrCreate

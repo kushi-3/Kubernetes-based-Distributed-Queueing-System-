@@ -1,0 +1,55 @@
+Edges:
+
+1763954592446 2025-11-24T03:23:12.446Z  [info] j42 IN q0 ARRIVE-VIA generator
+      ^                   ^                ^     ^     ^     ^         ^
+      |                   |                |     |     |     |         |
+  unix time           date+time           type  jID  queue  log      source
+
+1763954592446 2025-11-24T03:23:12.446Z  [info] j42 IN q0 DEPART-VIA q101
+      ^                   ^                ^     ^     ^     ^       ^
+      |                   |                |     |     |     |       |
+  unix time           date+time          type   jID  queue  log     edge
+
+
+Servers:
+
+1763954592446 2025-11-24T03:23:12.446Z  [info] j42 IN q0 ENTERS-SERVER 0
+      ^                   ^                ^     ^     ^     ^         ^
+      |                   |                |     |     |     |         |
+  unix time           date+time          type   jID  queue  log    server-num
+
+1763954592446 2025-11-24T03:23:12.446Z  [info] j42 IN q0 EXITS-SERVER 0
+      ^                   ^                ^     ^     ^     ^        ^
+      |                   |                |     |     |     |        |
+  unix time           date+time          type   jID  queue  log   server-num
+
+
+Tasks:
+
+1763954592446 2025-11-24T03:23:12.446Z  [info] j42 IN q0 TASK-START 1 wait 3
+      ^                   ^                ^     ^     ^     ^      ^  ^   ^
+      |                   |                |     |     |     |      |  |   |
+  unix time           date+time          type   jID  queue  log    tID op time
+
+1763954592446 2025-11-24T03:23:12.446Z  [info] j42 IN q0 TASK-STOP 1 wait 3
+      ^                   ^                ^     ^     ^     ^     ^  ^   ^
+      |                   |                |     |     |     |     |  |   |
+  unix time           date+time          type   jID  queue  log   tID op time
+
+1763954592446 2025-11-24T03:23:12.446Z  [info] j42 IN q0 COMPLETED
+      ^                   ^                ^    ^     ^     ^
+      |                   |                |    |     |     |
+  unix time           date+time          type  job  queue  log
+
+
+Errors:
+
+1763954592446 2025-11-24T03:23:12.446Z  [error] j42 in q0 QUEUE-FULL: max size = 10
+      ^                   ^                ^     ^     ^  [    ^    ] [     ^     ]
+      |                   |                |     |     |       |            |
+  unix time           date+time          type   job  queue error-type error-message
+
+1763954592446 2025-11-24T03:23:12.446Z  [error] j42 in q0 Server RPC FAILED: failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:50052: Failed to connect to remote host: Connection refused
+      ^                   ^                ^     ^     ^  [      ^         ] [                                                           ^                                                                     ]
+      |                   |                |     |     |         |                                                                       |
+  unix time           date+time          type   job  queue   error-type                                                             error-message

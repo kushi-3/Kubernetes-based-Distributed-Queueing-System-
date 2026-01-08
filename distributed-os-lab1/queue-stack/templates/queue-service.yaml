@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "queue-stack.queueName" . }}
+  labels:
+    app: queue
+    {{- include "queue-stack.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: {{ include "queue-stack.queueName" . }}
+  ports:
+    - name: grpc
+      port: {{ .Values.queue.port }}
+      targetPort: {{ .Values.queue.port }}
+    - name: metrics
+      port: 9100
+      targetPort: 9100

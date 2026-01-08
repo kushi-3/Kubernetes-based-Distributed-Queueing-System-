@@ -1,0 +1,9 @@
+distributor:
+  image: "doslab1/distributor:latest"
+  imagePullPolicy: IfNotPresent
+
+  numQueues: 8
+  replicas: 2
+  port: 50000
+
+resources: {}

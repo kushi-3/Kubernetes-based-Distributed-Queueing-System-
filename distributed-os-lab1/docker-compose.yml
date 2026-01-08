@@ -1,0 +1,134 @@
+# This docker-compose is outdated now that we use Kubernetes
+services:
+  # ========== QUEUE 0 ==========
+  queue0:
+    image: doslab1/queue:latest
+    container_name: queue0
+    command: ["0", "4", "1000", "1", "2"] # queue-id=0, num-servers=4, max-size=1000, edges-out: queue 1, queue 2
+    volumes:
+      - ./logs:/logs
+    networks:
+      - queues_net
+      - q0_net
+    ports:
+      - "50000:50000"
+
+  server0_0:
+    image: doslab1/server:latest
+    container_name: server0_0
+    command: ["0", "0"] # queue-id=0, server-id=0
+    networks:
+      - q0_net
+
+  server0_1:
+    image: doslab1/server:latest
+    container_name: server0_1
+    command: ["0", "1"]
+    networks:
+      - q0_net
+
+  server0_2:
+    image: doslab1/server:latest
+    container_name: server0_2
+    command: ["0", "2"]
+    networks:
+      - q0_net
+
+  server0_3:
+    image: doslab1/server:latest
+    container_name: server0_3
+    command: ["0", "3"]
+    networks:
+      - q0_net
+
+  # ========== QUEUE 1 ==========
+  queue1:
+    image: doslab1/queue:latest
+    container_name: queue1
+    command: ["1", "4", "1000", "0"]
+    volumes:
+      - ./logs:/logs
+    networks:
+      - queues_net
+      - q1_net
+
+  server1_0:
+    image: doslab1/server:latest
+    container_name: server1_0
+    command: ["1", "0"]
+    networks:
+      - q1_net
+
+  server1_1:
+    image: doslab1/server:latest
+    container_name: server1_1
+    command: ["1", "1"]
+    networks:
+      - q1_net
+
+  server1_2:
+    image: doslab1/server:latest
+    container_name: server1_2
+    command: ["1", "2"]
+    networks:
+      - q1_net
+
+  server1_3:
+    image: doslab1/server:latest
+    container_name: server1_3
+    command: ["1", "3"]
+    networks:
+      - q1_net
+
+  # ========== QUEUE 2 ==========
+  queue2:
+    image: doslab1/queue:latest
+    container_name: queue2
+    command: ["2", "4", "1000", "0"]
+    volumes:
+      - ./logs:/logs
+    networks:
+      - queues_net
+      - q2_net
+
+  server2_0:
+    image: doslab1/server:latest
+    container_name: server2_0
+    command: ["2", "0"]
+    networks:
+      - q2_net
+
+  server2_1:
+    image: doslab1/server:latest
+    container_name: server2_1
+    command: ["2", "1"]
+    networks:
+      - q2_net
+
+  server2_2:
+    image: doslab1/server:latest
+    container_name: server2_2
+    command: ["2", "2"]
+    networks:
+      - q2_net
+
+  server2_3:
+    image: doslab1/server:latest
+    container_name: server2_3
+    command: ["2", "3"]
+    networks:
+      - q2_net
+
+
+networks:
+  queues_net:
+    driver: bridge
+
+  q0_net:
+    driver: bridge
+
+  q1_net:
+    driver: bridge
+
+  q2_net:
+    driver: bridge

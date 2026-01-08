@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package jobqueue;
+
+import "google/protobuf/empty.proto";
+
+message Job {
+  int32 id = 1;
+  repeated Task tasks = 2;
+}
+
+message Task {
+  int32 id = 1;
+  string operation = 2;
+  int32 processing_time = 3;
+}
+
+// Client to Queue service
+service JobQueue {
+  rpc SubmitJob(Job) returns (SubmitJobResponse);
+}
+
+message SubmitJobResponse {
+  int32 id = 1;
+}
+
+// Queue service to Server
+service JobServer {
+  rpc ProcessJob(Job) returns (ProcessJobResponse);
+
+  rpc Prepare(ReplicaWrite) returns (VoteResponse);
+  rpc Commit(ReplicaWrite) returns (google.protobuf.Empty);
+  rpc Abort(ReplicaWrite) returns (google.protobuf.Empty);
+}
+
+message ProcessJobResponse {
+  bool success = 1;
+  string error_message = 2;
+  Job job = 3;
+  string value = 4;
+}
+
+message ReplicaWrite {
+  string key = 1;
+  string value = 2;
+  string op = 3;
+  string tx_id = 4;
+}
+
+message VoteResponse {
+  bool vote = 1;
+}
